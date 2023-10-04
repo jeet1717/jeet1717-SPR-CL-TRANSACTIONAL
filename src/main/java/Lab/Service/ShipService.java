@@ -19,6 +19,7 @@ import java.util.List;
  * attempting to get all ships. No ships should be persisted if any ship in the array has a negative or zero
  * tonnage - we're left to assume some form of unwanted user error in that case.
  */
+@Transactional(rollbackFor = InvalidTonnageException.class)
 @Service
 public class ShipService {
     ShipRepository shipRepository;
@@ -32,6 +33,7 @@ public class ShipService {
      * @param ships transient ship entities
      * @throws InvalidTonnageException ships can not have negative tonnage (they'd sink)
      */
+    
     public List<Ship> addListShips(List<Ship> ships) throws InvalidTonnageException {
         List<Ship> persistedShips = new ArrayList<>();
         for(int i = 0; i < ships.size(); i++){
@@ -45,12 +47,14 @@ public class ShipService {
     /**
      * @return all ship entities
      */
+    
     public List<Ship> getAllShips() {
         return shipRepository.findAll();
     }
     /**
      * @return ship entity by id
      */
+    
     public Ship getShipById(long id) {
         return shipRepository.findById(id).get();
     }
